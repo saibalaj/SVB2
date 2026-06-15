@@ -10,71 +10,76 @@ from reportlab.lib import colors
 # --- SVB2 Advanced Core Theme Setup & Responsive Layout ---
 st.set_page_config(page_title="SVB2 Pro Ecosystem", page_icon="🧬", layout="wide")
 
-# Force adaptive contrast so letters never bleed or disappear on light/dark backgrounds
+# Safe Core Override Engine: Guarantees absolute high-contrast reading visibility in BOTH light and dark UI instances
 st.markdown("""
 <style>
-    /* Global Dynamic Tokens based on system theme */
+    /* Absolute Theme Global Contracts */
     @media (prefers-color-scheme: dark) {
         :root {
-            --bg-color: #0d1117;
-            --text-color: #f0f6fc;
-            --card-bg: #161b22;
-            --border-color: #30363d;
-            --accent-glow: #00f2fe;
-            --muted-text: #8b949e;
+            --svb2-main-txt: #f0f6fc;
+            --svb2-card-bg: #161b22;
+            --svb2-border: #30363d;
+            --svb2-muted: #8b949e;
+            --svb2-highlight: #00f2fe;
         }
     }
     @media (prefers-color-scheme: light) {
         :root {
-            --bg-color: #f6f8fa;
-            --text-color: #24292f;
-            --card-bg: #ffffff;
-            --border-color: #d0d7de;
-            --accent-glow: #059669;
-            --muted-text: #57606a;
+            --svb2-main-txt: #111827; /* Explicit deep dark gray for ultimate readability */
+            --svb2-card-bg: #ffffff;
+            --svb2-border: #d1d5db;
+            --svb2-muted: #4b5563; /* Readable secondary text weight */
+            --svb2-highlight: #059669;
         }
     }
 
-    /* Override dynamic styles to fix font visibility blending */
+    /* Core Native Viewport Rule Blocks */
     .svb2-title {
-        color: var(--text-color) !important;
+        color: var(--svb2-main-txt) !important;
         font-weight: 800 !important;
-        letter-spacing: -0.03em;
+        margin-bottom: 15px !important;
     }
     .svb2-card {
-        background-color: var(--card-bg) !important;
-        color: var(--text-color) !important;
-        border: 1px solid var(--border-color) !important;
-        padding: 20px;
+        background-color: var(--svb2-card-bg) !important;
+        color: var(--svb2-main-txt) !important;
+        border: 2px solid var(--svb2-border) !important; /* Thickened line density */
+        padding: 22px;
         border-radius: 12px;
-        margin-bottom: 14px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        margin-bottom: 15px;
     }
     .svb2-badge {
-        background-color: var(--card-bg) !important;
-        color: var(--text-color) !important;
-        border-left: 5px solid var(--accent-glow) !important;
-        border-top: 1px solid var(--border-color) !important;
-        border-right: 1px solid var(--border-color) !important;
-        border-bottom: 1px solid var(--border-color) !important;
-        padding: 14px;
-        border-radius: 6px;
-        margin-bottom: 12px;
+        background-color: var(--svb2-card-bg) !important;
+        color: var(--svb2-main-txt) !important;
+        border-left: 6px solid var(--svb2-highlight) !important;
+        border-top: 1px solid var(--svb2-border) !important;
+        border-right: 1px solid var(--svb2-border) !important;
+        border-bottom: 1px solid var(--svb2-border) !important;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 14px;
     }
     .svb2-metric-val {
-        font-size: 1.75rem !important;
-        font-weight: 700 !important;
+        font-size: 1.85rem !important;
+        font-weight: 800 !important;
         font-family: monospace !important;
-        color: var(--text-color) !important;
+        color: var(--svb2-main-txt) !important;
     }
     .svb2-muted {
-        color: var(--muted-text) !important;
-        font-size: 0.85rem;
-        margin-bottom: 4px;
+        color: var(--svb2-muted) !important;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 6px;
     }
     .svb2-workout-line {
-        margin-bottom: 8px !important;
+        color: var(--svb2-main-txt) !important;
+        margin-bottom: 10px !important;
         line-height: 1.6 !important;
+        font-size: 1.05rem !important;
+    }
+    
+    /* Specific Markdown standard texts wrapper fixes */
+    .stMarkdown p {
+        color: var(--svb2-main-txt) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -118,38 +123,53 @@ INDIAN_7DAY_CORE = {
 # --- Core Algorithmic Session State Initialization ---
 if "auth" not in st.session_state:
     st.session_state.auth = {"login": False, "user": "", "role": "User"}
+if "show_reg_portal" not in st.session_state:
+    st.session_state.show_reg_portal = False
 
-# --- Login & Authentication Gateway Layout ---
+# --- Isolated Core Authentication Gateway ---
 if not st.session_state.auth["login"]:
-    st.markdown("<h1 class='svb2-title'>🧬 SVB2 — Core Health Panel</h1>", unsafe_allow_html=True)
-    t1, t2 = st.tabs(["🔒 Secure Authorization", "📝 Registration Node"])
+    st.markdown("<h1 class='svb2-title'>🧬 SVB2 — Secure Core Health Panel</h1>", unsafe_allow_html=True)
     
-    with t1:
-        u_in = st.text_input("User ID Token", key="l_user")
-        p_in = st.text_input("Secure Keyphrase", type="password", key="l_pass")
-        if st.button("Authenticate Platform Access"):
-            c = conn.cursor()
-            c.execute("SELECT role FROM system_users WHERE username=? AND password=?", (u_in, encrypt_pass(p_in)))
-            res = c.fetchone()
-            if res:
-                st.session_state.auth = {"login": True, "user": u_in, "role": res[0]}
-                st.rerun()
-            else: 
-                st.error("Invalid Authentication Parameters Provided.")
+    st.markdown("### 🔒 Secure Platform Authorization")
+    u_in = st.text_input("User ID Token", key="l_user")
+    p_in = st.text_input("Secure Keyphrase", type="password", key="l_pass")
+    
+    if st.button("Authenticate Platform Access", use_container_width=True):
+        c = conn.cursor()
+        c.execute("SELECT role FROM system_users WHERE username=? AND password=?", (u_in, encrypt_pass(p_in)))
+        res = c.fetchone()
+        if res:
+            st.session_state.auth = {"login": True, "user": u_in, "role": res[0]}
+            st.rerun()
+        else: 
+            st.error("Invalid Authentication Parameters Provided.")
             
-    with t2:
+    st.write("---")
+    
+    if st.button("⚠️ Core Platform Node: Toggle Registration Portal", help="Click to open or close Admin/User provisioning interface layer."):
+        st.session_state.show_reg_portal = not st.session_state.show_reg_portal
+        st.rerun()
+        
+    if st.session_state.show_reg_portal:
+        st.markdown("<div class='svb2-card' style='border: 2px dashed #ef4444 !important;'>", unsafe_allow_html=True)
+        st.markdown("### 📝 Internal Registry Gateway Node")
         u_rg = st.text_input("Create Handle ID", key="r_user")
         p_rg = st.text_input("Create Password", type="password", key="r_pass")
-        r_rl = st.selectbox("Baseline Authority Tier", ["User", "Admin"])
-        if st.button("Commit Account Registry"):
+        r_rl = st.selectbox("Baseline Authority Tier Assignment", ["User", "Admin"])
+        
+        if st.button("Commit Account Registry to DB"):
             if u_rg and p_rg:
                 try:
                     c = conn.cursor()
                     c.execute("INSERT INTO system_users (username, password, role) VALUES (?, ?, ?)", (u_rg, encrypt_pass(p_rg), r_rl))
                     conn.commit()
-                    st.success("Registration complete! Swap to Login Tab.")
+                    st.success(f"Success! Account Handle `{u_rg}` registered under tier `{r_rl}`. Toggle close and log in.")
                 except sqlite3.IntegrityError: 
-                    st.error("Handle registration conflict. Pick another name.")
+                    st.error("Handle registration conflict. Pick another system handle token identifier.")
+            else:
+                st.warning("All input handle key data vectors required.")
+        st.markdown("</div>", unsafe_allow_html=True)
+
 else:
     usr = st.session_state.auth["user"]
     perm = st.session_state.auth["role"]
@@ -217,12 +237,12 @@ else:
             fat_target = int((target_cal * 0.25) / 9)
             carb_target = int((target_cal - (prot_target * 4) - (fat_target * 9)) / 4)
             
-            # KPI Matrix Grid Configuration (Fully Dynamic Font Protection)
+            # KPI Matrix Grid Configuration
             grid_1, grid_2, grid_3, grid_4 = st.columns(4)
             grid_1.markdown(f"<div class='svb2-card'><div class='svb2-muted'>BMI Index</div><div class='svb2-metric-val'>{calculated_bmi}</div></div>", unsafe_allow_html=True)
             grid_2.markdown(f"<div class='svb2-card'><div class='svb2-muted'>Base BMR</div><div class='svb2-metric-val'>{base_bmr} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
             grid_3.markdown(f"<div class='svb2-card'><div class='svb2-muted'>TDEE Burn</div><div class='svb2-metric-val'>{calculated_tdee} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
-            grid_4.markdown(f"<div class='svb2-card' style='border: 1px solid var(--accent-glow) !important;'><div class='svb2-muted' style='color:var(--accent-glow); font-weight:bold;'>Target Intake</div><div class='svb2-metric-val' style='color:var(--accent-glow);'>{target_cal} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
+            grid_4.markdown(f"<div class='svb2-card' style='border: 2px solid var(--svb2-highlight) !important;'><div class='svb2-muted' style='color:var(--svb2-highlight); font-weight:bold;'>Target Intake</div><div class='svb2-metric-val' style='color:var(--svb2-highlight);'>{target_cal} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
             
             st.info(f"💡 **Calculated Chunks Required:** Protein: `{prot_target}g` | Carbohydrates: `{carb_target}g` | Fats: `{fat_target}g`")
             
@@ -232,16 +252,15 @@ else:
             
             w_tabs = st.tabs(["💪 5-Day PPL Custom Split", "🏃‍♂️ Cardio & Stamina Protocol", "🏸 Competitive Sports Integration"])
             
-            # Algorithmic parameter updates based on chosen configuration metrics
             if gl == "Weight Loss":
                 focus_title = "Metabolic Conditioning PPL (Fat Loss + Endurance)"
                 rep_text_1 = "15-25+ reps"
-                rep_text_2 = "High reps/Supersets"
+                rep_text_2 = "High reps/Supersets (12-15 reps)"
                 rest_limit = "30–45 sec short recovery"
             else:
                 focus_title = "Powerbuilding / Hypertrophy PPL (Strength + Size Volume)"
                 rep_text_1 = "3x6-8 heavy load parameters"
-                rep_text_2 = "3x8-10 or 3x10-15 volume sets"
+                rep_text_2 = "3x8-12 hyper load hypertrophy sets"
                 rest_limit = "60–90 sec rest tracking"
                 
             with w_tabs[0]:
@@ -250,12 +269,28 @@ else:
                     <b>⚡ 5-Day Professional Dynamic Routine Layout (Push-Pull-Legs-Push-Pull):</b>
                     <br><b>Current Protocol Focus:</b> {focus_title} | <b>Target Rest Window:</b> {rest_limit}
                 </div>
-                <div class='svb2-workout-line'>🔹 <b>Monday (Push):</b> Muscles: Chest, shoulders, triceps — Bench ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), Shoulder Press ({rep_text_1 if gl == 'Weight Loss' else '3×8-10'}), Flyes (3×10-15), Triceps (3×10-15)</div>
-                <div class='svb2-workout-line'>🔹 <b>Tuesday (Pull):</b> Muscles: Back, biceps, rear delts — Rows ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), Pull-ups ({rep_text_1 if gl == 'Weight Loss' else '3×8-10'}), Face Pulls (3×10-15), Shrugs (3×8-10)</div>
-                <div class='svb2-workout-line'>🔹 <b>Wednesday (Legs):</b> Muscles: Quads, hamstrings, glutes, calves — Squats ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), RDLs ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), Leg Press (3×8-10), Leg Curls (3×8-10), Calves (3-4 sets)</div>
-                <div class='svb2-workout-line'>🔹 <b>Thursday (Push):</b> Muscles: Chest, shoulders, triceps — Incline Press ({rep_text_2}), Lateral Raises ({rep_text_2}), Dips ({rep_text_2}), Overhead Extensions ({rep_text_2})</div>
-                <div class='svb2-workout-line'>🔹 <b>Friday (Pull):</b> Muscles: Back, biceps, rear delts — Chin-ups ({rep_text_2}), Single-Arm Rows ({rep_text_2}), Rear Delt Flyes ({rep_text_2}), Hammer Curls ({rep_text_2})</div>
-                <div class='svb2-workout-line' style='color:var(--muted-text); font-style: italic;'>⚠️ <b>Saturday & Sunday:</b> Rest and Systematic Recovery Cycles.</div>
+                <div class='svb2-workout-line'>🔹 <b>Monday (Push 1):</b> Chest, shoulders, triceps — Flat Bench Press ({rep_text_1}), Standing Overhead Barbell Press ({rep_text_1}), Incline Dumbbell Flyes (3×10-12), Cable Triceps Pushdowns (3×12-15)</div>
+                <div class='svb2-workout-line'>🔹 <b>Tuesday (Pull 1):</b> Back, biceps, rear delts — Conventional Deadlifts or Rack Pulls ({rep_text_1}), Weighted Pull-ups/Lat Pulldowns (3×8-10), Chest-Supported Rows (3×10-12), Standing Barbell Biceps Curls (3×8-12), Face Pulls (3×15)</div>
+                <div class='svb2-workout-line'>🔹 <b>Wednesday (Legs):</b> Muscles: Quads, hamstrings, glutes, calves — Barbell Squats ({rep_text_1}), Romanian Deadlifts (RDLs) ({rep_text_1}), Hack Squats / Leg Press (3×8-10), Lying Leg Curls (3×10-12), Standing Calf Raises (4×15)</div>
+                
+                <div class='svb2-workout-line' style='font-weight:bold; border-bottom: 1px dashed var(--svb2-border); padding-bottom:4px; margin-top:15px;'>🔹 Thursday (Push 2 - Variety Hypertrophy Split):</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Incline Dumbbell Press</i> ({rep_text_2}) &rarr; <b>Target:</b> Upper Chest Head</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Seated Dumbbell Shoulder Press</i> ({rep_text_2}) &rarr; <b>Target:</b> Anterior/Front Deltoid</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Decline Cable Flyes / Dips</i> (3×12) &rarr; <b>Target:</b> Lower Chest Lower Pectoralis Head</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Dumbbell Lateral Raises</i> (4×12-15) &rarr; <b>Target:</b> Side/Lateral Shoulder Cap</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Overhead Dumbbell Triceps Extensions</i> (3×10-12) &rarr; <b>Target:</b> Triceps Long Head movement</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Rope Pushdowns / Diamond Pushups</i> (3×12-15) &rarr; <b>Target:</b> Lateral & Medial Triceps Head</div>
+                
+                <div class='svb2-workout-line' style='font-weight:bold; border-bottom: 1px dashed var(--svb2-border); padding-bottom:4px; margin-top:15px;'>🔹 Friday (Pull 2 - Width & Depth Volume Split):</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Close-Grip Lat Pulldowns</i> ({rep_text_2}) &rarr; <b>Target:</b> Lat Width & Lower Insertion</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Barbell T-Bar Rows / Bent-Over Rows</i> ({rep_text_2}) &rarr; <b>Target:</b> Upper Back Thickness & Rhomboids</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Single-Arm Dumbbell Rows</i> (3×10) &rarr; <b>Target:</b> Unilateral Lat Depth Isolation</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Incline Dumbbell Biceps Curls</i> (3×10-12) &rarr; <b>Target:</b> Biceps Long Head Peak Movement</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Hammer Curls (Rope or DB)</i> (3×10-12) &rarr; <b>Target:</b> Brachioradialis Forearm & Brachialis Thickness</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Seated Rear Delt Dumbbell Flyes</i> (4×15) &rarr; <b>Target:</b> Posterior Shoulder Head</div>
+                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Hyperextensions / Good Mornings</i> (3×12) &rarr; <b>Target:</b> Lower Back Spinal Erectors Integration</div>
+                
+                <div class='svb2-workout-line' style='color:var(--svb2-muted); font-style: italic; margin-top:15px;'>⚠️ <b>Saturday & Sunday:</b> Rest and Systematic Recovery Cycles.</div>
                 """, unsafe_allow_html=True)
                 
             with w_tabs[1]:
@@ -276,6 +311,42 @@ else:
                 <div class='svb2-workout-line'>🏸 <b>Recommended Sports Structure:</b> Badminton / Squash or Swimming. Play for 45-60 minutes on Wednesday or Sunday.</div>
                 """, unsafe_allow_html=True)
 
+            # --- DYNAMIC BUDGET SUPPLEMENTS LOGIC ENGINE ---
+            st.write("---")
+            st.markdown("<h4 class='svb2-title'>💊 Algorithmic Post-Workout Budget Supplement Matrix (India Available)</h4>", unsafe_allow_html=True)
+            
+            supp_list = [
+                {"Name": "Raw Whey Protein Concentrate", "Timing": "Within 30 mins Post-Workout", "Dosage": "1 Scoop (approx. 24g-25g protein)", "Purpose": "Muscle tissue repair & immediate recovery acceleration.", "Budget_Brand": "Asitis Nutrition Raw / Nakpro Platinum (Approx. ₹1100-1400/kg)"}
+            ]
+            
+            if gl == "Muscle Gain":
+                supp_list.append({"Name": "Creatine Monohydrate (Micronized)", "Timing": "Post-Workout with Whey or high carb meal", "Dosage": "3g daily continuously", "Purpose": "ATP Resynthesis, cellular hydration & power output scaling.", "Budget_Brand": "Asitis Pure / MuscleBlaze Powder (Approx. ₹500-600 per 250g)"})
+            
+            if "Poor Digestion / Gut Dysbiosis" in meds:
+                supp_list.append({"Name": "Multi-Strain Probiotics & Enzymes", "Timing": "With Lunch / First meal", "Dosage": "1 Capsule daily (25-30 Billion CFU)", "Purpose": "Enhance nutrient absorption mechanics & alleviate bloating.", "Budget_Brand": "HealthKart VKare / Himalayan Organics (Approx. ₹400-500)"})
+                
+            if "Chronic Fatigue Syndrome" in meds or stress == "High - Burnout Phase":
+                supp_list.append({"Name": "Ashwagandha (KSM-66 Extract)", "Timing": "Pre-bed with warm water or milk", "Dosage": "300mg - 500mg daily", "Purpose": "Cortisol regulation, dynamic stress reduction & deep sleep support.", "Budget_Brand": "Himalaya Ashwagandha / Organic India (Approx. ₹180-250)"})
+                
+            if "Hair Thinning / Alopecia" in meds:
+                supp_list.append({"Name": "Biotin + Zinc & Multi-minerals", "Timing": "After Breakfast", "Dosage": "1 Tablet daily", "Purpose": "Keratin protein synthesis acceleration & follicular reinforcement.", "Budget_Brand": "HealthKart Multivitamin with Biotin / Carbamide Forte (Approx. ₹350-450)"})
+            
+            if a >= 40:
+                supp_list.append({"Name": "Omega-3 Fish Oil (High EPA/DHA) & Glucosamine", "Timing": "With Dinner", "Dosage": "1-2 Softgels daily", "Purpose": "Joint lubricating support, reduced systemic inflammation & cardiovascular care.", "Budget_Brand": "Wow Life Science / TrueBasics Budget packs (Approx. ₹450-600)"})
+            else:
+                supp_list.append({"Name": "Daily Budget Multivitamin-Mineral Spectrum", "Timing": "After Breakfast", "Dosage": "1 Tablet daily", "Purpose": "Fill trace micronutrient deficiencies caused by high training output.", "Budget_Brand": "Zincovit / HealthKart Multivitamin (Approx. ₹110-300)"})
+
+            for supp in supp_list:
+                with st.container():
+                    st.markdown(f"""
+                    <div class='svb2-badge' style='border-left: 6px solid #ef4444 !important;'>
+                        <b style='font-size:1.1rem;'>⚡ {supp['Name']}</b> | ⏰ Timing: <code>{supp['Timing']}</code>
+                        <br>• <b>Recommended Dosage:</b> {supp['Dosage']}
+                        <br>• <b>Biological Purpose:</b> {supp['Purpose']}
+                        <br>• <b>Budget Friendly Option:</b> <span style='color:#059669; font-weight:bold;'>{supp['Budget_Brand']}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+
             st.write("---")
             st.markdown("<h4 class='svb2-title'>🩺 Integrated Holistic Protocols</h4>", unsafe_allow_html=True)
             
@@ -284,22 +355,19 @@ else:
             
             if "Hair Thinning / Alopecia" in meds or gl == "Weight Loss":
                 st.markdown("<div class='svb2-badge'><b>💇‍♀️ Follicle Density & Hair Growth Protocol:</b> Hair structure requires Keratin protein. Ensure your daily iron and zinc metrics are protected.</div>", unsafe_allow_html=True)
-                
-            if "Chronic Fatigue Syndrome" in meds or stress == "High - Burnout Phase":
-                st.markdown("<div class='svb2-badge'><b>⚡ Adrenal Fatigue & Neuroendocrine Recovery:</b> Integrate 3g Ashwagandha powder with warm milk before sleep.</div>", unsafe_allow_html=True)
 
             h2o_target = round((w * 35) / 1000, 1)
             st.success(f"💧 **Hydration Command:** Drink exactly **{h2o_target} Liters** of filtered water daily.")
 
             # Display Planned Data Matrices
             st.write("---")
-            st.markdown("<h4 class='svb2-title'>📅 High-Protein Economical 7-Day Indian Routine (Fibre & Healthy Fats Enriched)</h4>", unsafe_allow_html=True)
+            st.markdown("<h4 class='svb2-title'>📅 High-Protein Economical 7-Day Indian Routine</h4>", unsafe_allow_html=True)
             current_diet_matrix = INDIAN_7DAY_CORE[dt]
             for day_node, diet_description in current_diet_matrix.items():
                 with st.expander(f"📅 View Menu Parameters for {day_node}"):
                     st.write(diet_description.replace(" | ", "\n\n"))
 
-            # --- Master PDF Blueprint Compilation Execution (Diet, Sleep, Water & Workouts) ---
+            # --- Master PDF Blueprint Compilation Execution ---
             st.write("---")
             st.markdown("<h4 class='svb2-title'>📑 Master Blueprint Download Gateway</h4>", unsafe_allow_html=True)
             pdf_out_name = f"{usr}_svb2_master_report.pdf"
@@ -308,7 +376,6 @@ else:
                 doc_file = SimpleDocTemplate(pdf_out_name, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
                 styles_setup = getSampleStyleSheet()
                 
-                # Custom Document Style Tokens
                 style_header = ParagraphStyle('DocHeader', parent=styles_setup['Heading1'], fontSize=22, textColor=colors.HexColor('#059669'), spaceAfter=15)
                 style_section = ParagraphStyle('DocSec', parent=styles_setup['Heading2'], fontSize=14, textColor=colors.HexColor('#1e293b'), spaceBefore=12, spaceAfter=6)
                 style_body = ParagraphStyle('DocBody', parent=styles_setup['Normal'], fontSize=10, leading=16, spaceAfter=8)
@@ -345,37 +412,45 @@ else:
                 elements_flow.append(t_metrics)
                 elements_flow.append(Spacer(1, 12))
                 
-                # SECTION 2: LIFE RECOVERY PROTOCOLS (WATER & SLEEP)
-                elements_flow.append(Paragraph("2. Circadian Recovery & Hydration Parameters", style_section))
-                recovery_text = f"""
-                • <b>Target Circadian Sleep Frame:</b> Expected strict target of <b>{sleep_hrs} Hours</b> per 24-hour cycle.<br/>
-                • <b>Absolute Hydration Target:</b> Drink exactly <b>{h2o_target} Liters</b> of pure water daily.<br/>
-                • <b>Somatic Stress Marker Level:</b> System registered as <i>{stress}</i>.
-                """
-                elements_flow.append(Paragraph(recovery_text, style_body))
-                elements_flow.append(Spacer(1, 10))
+                # SECTION 2: SUPPLEMENTS MATRIX GENERATION
+                elements_flow.append(Paragraph("2. Tailored Post-Workout & Budget Supplement Stack (India Safe)", style_section))
+                supp_table_data = [["Supplement Name", "Timing & Dose", "Clinical Purpose & Budget Indian Brand"]]
+                for s in supp_list:
+                    desc_para = f"<b>Purpose:</b> {s['Purpose']}<br/><b>Recommended Choice:</b> {s['Budget_Brand']}"
+                    supp_table_data.append([s['Name'], f"{s['Timing']}\n\n({s['Dosage']})", Paragraph(desc_para, style_body)])
                 
-                # SECTION 3: INTEGRATED PHYSICAL TRANSFORMATION WORKOUT MATRIX (PDF Version)
+                t_supp = Table(supp_table_data, colWidths=[120, 120, 220])
+                t_supp.setStyle(TableStyle([
+                    ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#ef4444')),
+                    ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+                    ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+                    ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                    ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+                    ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
+                ]))
+                elements_flow.append(t_supp)
+                elements_flow.append(Spacer(1, 12))
+                
+                # SECTION 3: INTEGRATED PHYSICAL TRANSFORMATION WORKOUT MATRIX
                 elements_flow.append(Paragraph("3. Resistance Training & Cardio Splits Blueprint", style_section))
                 workout_text = f"""
                 <b>A. 5-Day Custom Workout Target System (Phase: {gl}):</b><br/>
-                • <b>Workout Focus Type:</b> {focus_title}<br/>
-                • <b>Rest Matrix Floor:</b> {rest_limit}<br/><br/>
-                • <b>Monday (Push):</b> Muscles: Chest, shoulders, triceps — Bench ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), Shoulder Press ({rep_text_1 if gl == 'Weight Loss' else '3×8-10'}), Flyes (3×10-15), Triceps (3×10-15)<br/>
-                • <b>Tuesday (Pull):</b> Muscles: Back, biceps, rear delts — Rows ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), Pull-ups ({rep_text_1 if gl == 'Weight Loss' else '3×8-10'}), Face Pulls (3×10-15), Shrugs (3×8-10)<br/>
-                • <b>Wednesday (Legs):</b> Muscles: Quads, hamstrings, glutes, calves — Squats ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), RDLs ({rep_text_1 if gl == 'Weight Loss' else '3×6-8'}), Leg Press (3×8-10), Leg Curls (3×8-10), Calves<br/>
-                • <b>Thursday (Push):</b> Muscles: Chest, shoulders, triceps — Incline Press ({rep_text_2}), Lateral Raises ({rep_text_2}), Dips ({rep_text_2}), Overhead Extensions ({rep_text_2})<br/>
-                • <b>Friday (Pull):</b> Muscles: Back, biceps, rear delts — Chin-ups ({rep_text_2}), Single-Arm Rows ({rep_text_2}), Rear Delt Flyes ({rep_text_2}), Hammer Curls ({rep_text_2})<br/><br/>
+                • <b>Workout Focus Type:</b> {focus_title} | <b>Rest Limits:</b> {rest_limit}<br/><br/>
+                • <b>Monday (Push 1):</b> Flat Bench, Shoulder Press, Flyes, Triceps Pushdowns<br/>
+                • <b>Tuesday (Pull 1):</b> Deadlifts/Rack Pulls, Lat Pulldowns, Rows, Barbell Curls, Face Pulls<br/>
+                • <b>Wednesday (Legs):</b> Barbell Squats, RDLs, Hack Squats/Leg Press, Lying Leg Curls, Calves<br/><br/>
+                • <b>Thursday (Push 2 Variety):</b> Incline DB Press (Upper Chest), Seated DB Shoulder Press (Front Delt), Decline Cable Flyes/Dips (Lower Chest), DB Lateral Raises (Side Delt Cap), Overhead DB Extensions (Triceps Long Head), Rope Pushdowns (Lateral/Medial Heads)<br/><br/>
+                • <b>Friday (Pull 2 Volume):</b> Close-Grip Lat Pulldowns (Width), T-Bar Rows (Upper Back Thickness), Single-Arm DB Rows (Isolation Depth), Incline DB Curls (Biceps Peak), Hammer Curls (Forearms/Brachialis), Seated Rear Delt Flyes (Back Shoulder Head), Hyperextensions (Lower Back Erectors)<br/><br/>
                 <b>B. Stamina & Cardio Framework:</b><br/>
-                • LISS Cardio: 35 Mins Incline Treadmill Walking (5.0 km/h, 6%-8% incline) post lifting.<br/>
-                • HIIT Cardio: 15 Mins Stationary Cycling (30s max sprint / 60s recovery interval).<br/>
-                • Daily Target Activity Base: Maintain a floor of 8,000 - 10,000 steps daily.
+                • LISS Cardio: 35 Mins Incline Treadmill Walking daily post weight sessions.<br/>
+                • HIIT Cardio: 15 Mins Stationary Cycling (30s sprint / 60s recovery).
                 """
                 elements_flow.append(Paragraph(workout_text, style_body))
                 elements_flow.append(Spacer(1, 10))
                 
                 # SECTION 4: DIET ROUTINE ASSIGNMENTS
-                elements_flow.append(Paragraph("4. Economical 7-Day Nutritional Routine Log (Fibre & Fats Enriched)", style_section))
+                elements_flow.append(Paragraph("4. Economical 7-Day Nutritional Routine Log", style_section))
                 diet_table_data = [["Day Node", f"Planned Plan Matrix Breakdown ({dt})"]]
                 for day, desc in current_diet_matrix.items():
                     clean_desc = desc.replace(" | ", "<br/><br/>")
