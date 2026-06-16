@@ -232,10 +232,19 @@ else:
             else: 
                 target_cal = calculated_tdee
             
-            # --- Fixed Precise Caloric Distribution Split Formulas ---
-            prot_target = int((target_cal * 0.30) / 4)
-            fat_target = int((target_cal * 0.25) / 9)
-            carb_target = int((target_cal - (prot_target * 4) - (fat_target * 9)) / 4)
+            # --- FIXED SECURE MATHEMATICAL MACRO ALLOCATION LOGIC ---
+            # 1. Protein gets absolute 30% of Total Daily Target Calories (1g Protein = 4 kcal)
+            prot_cal = target_cal * 0.30
+            prot_target = int(prot_cal / 4)
+            
+            # 2. Fats get absolute 25% of Total Daily Target Calories (1g Fat = 9 kcal)
+            fat_cal = target_cal * 0.25
+            fat_target = int(fat_cal / 9)
+            
+            # 3. Carbohydrates get the exact absolute remainder of calories (1g Carbs = 4 kcal)
+            # This ensures (Carbs*4 + Protein*4 + Fats*9) completely sums up precisely to target_cal!
+            carb_cal = target_cal - (prot_target * 4) - (fat_target * 9)
+            carb_target = int(carb_cal / 4)
             
             # KPI Matrix Grid Configuration
             grid_1, grid_2, grid_3, grid_4 = st.columns(4)
@@ -244,7 +253,7 @@ else:
             grid_3.markdown(f"<div class='svb2-card'><div class='svb2-muted'>TDEE Burn</div><div class='svb2-metric-val'>{calculated_tdee} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
             grid_4.markdown(f"<div class='svb2-card' style='border: 2px solid var(--svb2-highlight) !important;'><div class='svb2-muted' style='color:var(--svb2-highlight); font-weight:bold;'>Target Intake</div><div class='svb2-metric-val' style='color:var(--svb2-highlight);'>{target_cal} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
             
-            st.info(f"💡 **Calculated Chunks Required:** Protein: `{prot_target}g` | Carbohydrates: `{carb_target}g` | Fats: `{fat_target}g`")
+            st.info(f"💡 **Calculated Precise Chunks:** Protein: `{prot_target}g` ({int(prot_target*4)} kcal) | Carbohydrates: `{carb_target}g` ({int(carb_target*4)} kcal) | Fats: `{fat_target}g` ({int(fat_target*9)} kcal) &rarr; **Total Sum Check:** `{int(prot_target*4 + carb_target*4 + fat_target*9)} kcal` / `{target_cal} kcal`")
             
             # --- Workout & Cardio Programs Integration Module ---
             st.write("---")
