@@ -1,5 +1,12 @@
 import streamlit as st
-import sqlite3
+import os
+
+# --- Render Production SQLite Compatibility Safe Layer Patch ---
+try:
+    import pysqlite3 as sqlite3
+except ImportError:
+    import sqlite3
+
 import hashlib
 from datetime import datetime
 from reportlab.lib.pagesizes import letter
@@ -13,7 +20,6 @@ st.set_page_config(page_title="SVB2 Pro Ecosystem", page_icon="🧬", layout="wi
 # Safe Core Override Engine: Guarantees absolute high-contrast reading visibility in BOTH light and dark UI instances
 st.markdown("""
 <style>
-    /* Absolute Theme Global Contracts */
     @media (prefers-color-scheme: dark) {
         :root {
             --svb2-main-txt: #f0f6fc;
@@ -25,98 +31,149 @@ st.markdown("""
     }
     @media (prefers-color-scheme: light) {
         :root {
-            --svb2-main-txt: #111827; /* Explicit deep dark gray for ultimate readability */
+            --svb2-main-txt: #111827; 
             --svb2-card-bg: #ffffff;
             --svb2-border: #d1d5db;
-            --svb2-muted: #4b5563; /* Readable secondary text weight */
+            --svb2-muted: #4b5563; 
             --svb2-highlight: #059669;
         }
     }
-
-    /* Core Native Viewport Rule Blocks */
-    .svb2-title {
-        color: var(--svb2-main-txt) !important;
-        font-weight: 800 !important;
-        margin-bottom: 15px !important;
-    }
-    .svb2-card {
-        background-color: var(--svb2-card-bg) !important;
-        color: var(--svb2-main-txt) !important;
-        border: 2px solid var(--svb2-border) !important; /* Thickened line density */
-        padding: 22px;
-        border-radius: 12px;
-        margin-bottom: 15px;
-    }
-    .svb2-badge {
-        background-color: var(--svb2-card-bg) !important;
-        color: var(--svb2-main-txt) !important;
-        border-left: 6px solid var(--svb2-highlight) !important;
-        border-top: 1px solid var(--svb2-border) !important;
-        border-right: 1px solid var(--svb2-border) !important;
-        border-bottom: 1px solid var(--svb2-border) !important;
-        padding: 16px;
-        border-radius: 8px;
-        margin-bottom: 14px;
-    }
-    .svb2-metric-val {
-        font-size: 1.85rem !important;
-        font-weight: 800 !important;
-        font-family: monospace !important;
-        color: var(--svb2-main-txt) !important;
-    }
-    .svb2-muted {
-        color: var(--svb2-muted) !important;
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 6px;
-    }
-    .svb2-workout-line {
-        color: var(--svb2-main-txt) !important;
-        margin-bottom: 10px !important;
-        line-height: 1.6 !important;
-        font-size: 1.05rem !important;
-    }
-    
-    /* Specific Markdown standard texts wrapper fixes */
-    .stMarkdown p {
-        color: var(--svb2-main-txt) !important;
-    }
+    .svb2-title { color: var(--svb2-main-txt) !important; font-weight: 800 !important; margin-bottom: 15px !important; }
+    .svb2-card { background-color: var(--svb2-card-bg) !important; color: var(--svb2-main-txt) !important; border: 2px solid var(--svb2-border) !important; padding: 22px; border-radius: 12px; margin-bottom: 15px; }
+    .svb2-badge { background-color: var(--svb2-card-bg) !important; color: var(--svb2-main-txt) !important; border-left: 6px solid var(--svb2-highlight) !important; border-top: 1px solid var(--svb2-border) !important; border-right: 1px solid var(--svb2-border) !important; border-bottom: 1px solid var(--svb2-border) !important; padding: 16px; border-radius: 8px; margin-bottom: 14px; }
+    .svb2-metric-val { font-size: 1.85rem !important; font-weight: 800 !important; font-family: monospace !important; color: var(--svb2-main-txt) !important; }
+    .svb2-muted { color: var(--svb2-muted) !important; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+    .svb2-workout-line { color: var(--svb2-main-txt) !important; margin-bottom: 10px !important; line-height: 1.6 !important; font-size: 1.05rem !important; }
+    .stMarkdown p { color: var(--svb2-main-txt) !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- SQLite Persistent Layer Setup ---
-def init_database_layer():
-    conn = sqlite3.connect('svb2_core.db', check_same_thread=False)
+# --- Thread-Safe Cached Database Engine Architecture ---
+@st.cache_resource
+def get_db_connection():
+    # Eliminates unsafe connection tracking vectors via thread-isolated session memory maps
+    conn = sqlite3.connect('2_svb2_core.db', check_same_thread=False)
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS system_users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT, role TEXT)''')
     conn.commit()
     return conn
 
-conn = init_database_layer()
+conn = get_db_connection()
 
 def encrypt_pass(password): 
     return hashlib.sha256(str.encode(password)).hexdigest()
 
-# --- Balanced Multi-Target Indian Local Database Dictionary ---
+# --- BALANCED SHIFT ROUTINE PROTOCOLS (INDIAN TIMESTAMPS) ---
+SHIFT_TIMELINE_DATABASE = {
+    "Morning Shift (6:00 AM - 3:00 PM)": {
+        "Sleep Window": "🌙 **9:30 PM to 5:00 AM** (Protects baseline deep recovery architecture)",
+        "Exercise Window": "🏋️‍♂️ **4:00 PM to 5:15 PM** (Post-shift energy surge execution)",
+        "Timestamps": {
+            "Veg": [
+                "⏰ 05:30 AM (Pre-Shift Fuel): Warm Water + 5 Soaked Almonds.",
+                "⏰ 08:30 AM (Breakfast Break): Sattu Shake (30g Sattu powder in water/buttermilk) OR Paneer Toast.",
+                "⏰ 01:00 PM (Lunch Break): Homestyle Rice/Roti + Thick Dal + Sabzi + 100g Paneer Curry.",
+                "⏰ 03:30 PM (Pre-Workout Fuel): 75g Oats cooked with dry fruits.",
+                "⏰ 05:30 PM (Post-Workout Recovery): Raw Whey Protein Shake + 1 Toast.",
+                "⏰ 08:30 PM (Dinner): Light Carb Roti/Rice + Mixed green salad + Low-fat Tofu / Paneer."
+            ],
+            "Non-Veg": [
+                "⏰ 05:30 AM (Pre-Shift Fuel): Warm Water + 5 Soaked Almonds.",
+                "⏰ 08:30 AM (Breakfast Break): 3 Whole Boiled Eggs + 1 Slice Whole Wheat Toast.",
+                "⏰ 01:00 PM (Lunch Break): Homestyle Rice/Roti + Thick Dal + 150g Chicken Breast Curry.",
+                "⏰ 03:30 PM (Pre-Workout Fuel): 75g Oats cooked with dry fruits.",
+                "⏰ 05:30 PM (Post-Workout Recovery): Raw Whey Protein Shake + 1 Toast.",
+                "⏰ 08:30 PM (Dinner): Light Carb Roti/Rice + Mixed green salad + 150g Grilled Fish or Lean Chicken."
+            ]
+        }
+    },
+    "Afternoon Shift (2:00 PM - 11:00 PM)": {
+        "Sleep Window": "🌙 **12:00 AM to 7:30 AM** (Maintains stable nighttime circadian rhythm)",
+        "Exercise Window": "🏋️‍♂️ **10:30 AM to 11:45 AM** (Mid-morning high-strength target window)",
+        "Timestamps": {
+            "Veg": [
+                "⏰ 08:00 AM (Breakfast / Meal 1): Oats Upma with high-fibre sprouts + 100g Paneer Bhurji.",
+                "⏰ 10:00 AM (Pre-Workout Snack): 1 Banana or Black Coffee.",
+                "⏰ 12:00 PM (Post-Workout / Heavy Lunch): Rice + Thick Dal + Salad + Pan-toasted Soy Chunks.",
+                "⏰ 05:30 PM (Mid-Shift Snack): Sattu Drink / Sprouted Chaat + Handful of Roasted Peanuts.",
+                "⏰ 08:30 PM (Dinner Break): 2 Chapatis + Mixed Veg Curry + Curd (Dahi).",
+                "⏰ 11:30 PM (Pre-bed Micro): Warm Turmeric Milk / Ashwagandha Capsule layer."
+            ],
+            "Non-Veg": [
+                "⏰ 08:00 AM (Breakfast / Meal 1): Oats Upma + 3 Scrambled Egg Whites + 1 Whole Egg.",
+                "⏰ 10:00 AM (Pre-Workout Snack): 1 Banana or Black Coffee.",
+                "⏰ 12:00 PM (Post-Workout / Heavy Lunch): Rice + Thick Dal + Salad + 150g Chicken Breast/Fish Curry.",
+                "⏰ 05:30 PM (Mid-Shift Snack): Boiled Egg Chaat (3 Egg Whites) + Handful of Roasted Peanuts.",
+                "⏰ 08:30 PM (Dinner Break): 2 Chapatis + Chicken Keema Gravy + High-Fibre Salad.",
+                "⏰ 11:30 PM (Pre-bed Micro): Warm Turmeric Milk / Ashwagandha Capsule layer."
+            ]
+        }
+    },
+    "Evening Shift (5:30 PM - 3:00 AM)": {
+        "Sleep Window": "🌙 **03:30 AM to 11:00 AM** (Strict blackout curtains & quiet environment required)",
+        "Exercise Window": "🏋️‍♂️ **04:00 PM to 05:00 PM** (Pre-shift activation to eliminate fatigue latency)",
+        "Timestamps": {
+            "Veg": [
+                "⏰ 11:30 AM (Wakeup / Meal 1): Homestyle Rice + Balanced Thick Dal + 100g Grilled Paneer Chunks.",
+                "⏰ 03:15 PM (Pre-Workout Fuel): 75g Oats + Dry fruits combo pattern matrix.",
+                "⏰ 05:30 PM (Post-Workout Shift Login): Consume Raw Whey Protein Shake immediately upon login.",
+                "⏰ 09:30 PM (Mid-Shift Core Dinner): Carried Box: Low-fat Paneer / Soya Chunks curry + Controlled Rice.",
+                "⏰ 01:00 AM (Midnight Cutoff): Stop all Caffeine/Tea intake strictly to protect sleep cycle engine.",
+                "⏰ 03:15 AM (Pre-Bed Protein Shield): 1 Small Glass Buttermilk or Sattu Shake."
+            ],
+            "Non-Veg": [
+                "⏰ 11:30 AM (Wakeup / Meal 1): Homestyle Rice + Balanced Thick Dal + 3 Eggs Omelette or Fish Curry.",
+                "⏰ 03:15 PM (Pre-Workout Fuel): 75g Oats + Dry fruits combo pattern matrix.",
+                "⏰ 05:30 PM (Post-Workout Shift Login): Consume Raw Whey Protein Shake immediately upon login.",
+                "⏰ 09:30 PM (Mid-Shift Core Dinner): Carried Box: Chicken Keema / 3 Boiled Eggs + Controlled Rice Structure.",
+                "⏰ 01:00 AM (Midnight Cutoff): Stop all Caffeine/Tea intake strictly to protect sleep cycle engine.",
+                "⏰ 03:15 AM (Pre-Bed Protein Shield): 3 Egg Whites or 1 Small Glass Buttermilk."
+            ]
+        }
+    },
+    "Night Shift (10:00 PM - 7:00 AM)": {
+        "Sleep Window": "🌙 **08:00 AM to 3:30 PM** (Reversed sleep-wake biological rhythm parameters)",
+        "Exercise Window": "🏋️‍♂️ **05:30 PM to 06:45 PM** (Evening peak structural muscle execution interval)",
+        "Timestamps": {
+            "Veg": [
+                "⏰ 04:00 PM (Wakeup Meal / Breakfast): Sattu Shake (30g Sattu) + Peanut Butter Toast + 5 Almonds.",
+                "⏰ 05:00 PM (Pre-Workout Snap): Handful of Roasted Chana.",
+                "⏰ 07:15 PM (Post-Workout Main Meal): High protein Dinner Setup: Rice/Roti + Dal + 120g Pan-toasted Paneer.",
+                "⏰ 11:30 PM (First Shift Snack): Curd (Dahi) + Roasted Makhana or Apple with peanut butter.",
+                "⏰ 02:30 AM (Midnight Lunch Break): 2 Chapatis + Soy Chunks Curry / Mixed Veg + Green Salad.",
+                "⏰ 05:00 AM (Early Morning Cutoff): No tea/coffee. Shift to plain water hydration tracker to allow sleep ease at 8 AM."
+            ],
+            "Non-Veg": [
+                "⏰ 04:00 PM (Wakeup Meal / Breakfast): 3 Whole Boiled Eggs + Peanut Butter Toast + 5 Almonds.",
+                "⏰ 05:00 PM (Pre-Workout Snap): Black coffee / Handful of Roasted Chana.",
+                "⏰ 07:15 PM (Post-Workout Main Meal): High protein Dinner Setup: Rice/Roti + Dal + 150g Chicken or Fish Curry.",
+                "⏰ 11:30 PM (First Shift Snack): 2 Egg Whites + Roasted Makhana or Apple with peanut butter.",
+                "⏰ 02:30 AM (Midnight Lunch Break): 2 Chapatis + Chicken Keema or Egg White Curry + Green Salad.",
+                "⏰ 05:00 AM (Early Morning Cutoff): No tea/coffee. Shift to plain water hydration tracker to allow sleep ease at 8 AM."
+            ]
+        }
+    }
+}
+
 INDIAN_7DAY_CORE = {
     "Veg": {
-        "Monday": "Breakfast: Sattu Shake (30g Sattu powder + Buttermilk) + 50g Roasted Peanuts + 5 Soaked Almonds & 2 Walnuts. | Lunch: Rice/Roti + Thick Dal Tadka + 100g Paneer/Tofu stir fry in 1 tsp Ghee + Salad (High Fibre Broccoli/Carrots). | Evening Snack: 1 Cup Curd (Dahi) + Soaked Chana. | Dinner: Soy Chunks Curry + 2 Chapatis + Green Salad + Half Avocado.",
-        "Tuesday": "Breakfast: Oats Upma mixed with High-Fibre Sprouts & green peas + 1 Glass Lassi + Peanut Butter Toast. | Lunch: Rajma Thick Gravy + 1 Bowl Brown Rice + Beetroot & Cucumber Salad. | Evening Snack: Roasted Makhana in Coconut Oil with Pumpkin Seeds. | Dinner: Mixed Vegetable & Paneer Bhurji + 2 Rotis + Buttermilk.",
-        "Wednesday": "Breakfast: Moong Dal Cheela (Stuffed with 50g grated Paneer) + Green Chutney + 5 Almonds & 2 Walnuts. | Lunch: Black Chana Curry + Rice/Roti + Cucumber Curd Raita. | Evening Snack: Sattu Drink + Roasted Cumin Powder. | Dinner: Palak Paneer cooked with 1 tsp Ghee + 2 Whole Wheat Rotis.",
-        "Thursday": "Breakfast: Peanut Butter Toast (2 Slices) + 1 Glass Cow Milk + 5 Soaked Almonds + Half Avocado. | Lunch: Whole Green Moong Dal + Jowar/Bajra Roti + Cabbage Sabzi cooked in Coconut Oil. | Evening Snack: High-Fibre Sprouts Chaat (Onion, Tomato, Lemon Juice). | Dinner: Tofu or Paneer Kebabs + Vegetable Khichdi + Curd.",
-        "Friday": "Breakfast: Besan Cheela with Flaxseeds + 100g Low-fat Curd + 5 Almonds. | Lunch: Lobia Curry + Rice + Large Green Onion & Carrot Salad. | Evening Snack: Handful of Roasted Peanuts & Chana Mixture. | Dinner: Soy Chunk Pulav cooked in 1 tsp Ghee + Mixed Veg Raita.",
-        "Saturday": "Breakfast: 1 Bowl Milk Oats + 1 tbsp Chia Seeds + 1 Banana + 2 Walnuts. | Lunch: Dal Makhani (Low Cream) + 2 Roti + Stir Fried High-Fibre Cauliflower & Carrot. | Evening Snack: Buttermilk with Ginger & Cumin Powder. | Dinner: Paneer Butter Masala (Low oil) + 2 Missi Rotis + Cucumber + Avocado slices.",
-        "Sunday": "Breakfast: Mixed Sprouts Salad with Pomegranate & Lemon + Sattu Shake + 5 Almonds. | Lunch: Chole Gravy + Jeera Rice + Onion Tomato & High-Fibre Salad. | Evening Snack: Roasted Pumpkin Seeds + Green Tea. | Dinner: Kadhi Chawal / Roti + Paneer chunks pan toasted with Black Pepper in 1 tsp Ghee."
+        "Monday": "Sattu Shake (30g Sattu powder) + Thick Dal Tadka + 100g Paneer/Tofu stir fry in 1 tsp Ghee + Soy Chunks Curry.",
+        "Tuesday": "Oats Upma with High-Fibre Sprouts + Peanut Butter Toast + Rajma Thick Gravy + Mixed Vegetable & Paneer Bhurji.",
+        "Wednesday": "Moong Dal Cheela (Stuffed with 50g Paneer) + Black Chana Curry + Cucumber Curd Raita + Palak Paneer.",
+        "Thursday": "Peanut Butter Toast + Whole Green Moong Dal + Jowar/Bajra Roti + Tofu or Paneer Kebabs + Veg Khichdi.",
+        "Friday": "Besan Cheela with Flaxseeds + 100g Low-fat Curd + Lobia Curry + Soy Chunk Pulav cooked in 1 tsp Ghee.",
+        "Saturday": "Milk Oats + 1 tbsp Chia Seeds + Dal Makhani (Low Cream) + Paneer Butter Masala (Controlled Low oil Setup).",
+        "Sunday": "Mixed Sprouts Salad + Chole Gravy + Jeera Rice + Paneer chunks pan toasted with Black Pepper in 1 tsp Ghee."
     },
     "Non-Veg": {
-        "Monday": "Breakfast: 3 Whole Boiled Eggs + 1 Glass Milk + Handful of Peanuts + 5 Soaked Almonds & 2 Walnuts. | Lunch: Chicken Breast (150g, Stew/Gravy cooked in 1 tsp Ghee) + Brown Rice + High-Fibre Salad. | Evening Snack: 3 Egg White Scramble + Peanut Butter Toast. | Dinner: Fish Curry (Rohu/Bangda) + 2 Chapatis + Half Avocado.",
-        "Tuesday": "Breakfast: Chicken Keema Stuffed Roti (2) + 1 Glass Buttermilk + 5 Almonds. | Lunch: Thick Dal Tadka + 3 Egg White Omelette cooked in Coconut Oil + Rice + Veggies. | Evening Snack: Sattu Shake + 2 Boiled Eggs (No Yolk). | Dinner: Grilled/Tandoori Chicken Chunks + 1 Roti + Large High-Fibre Salad Platter.",
-        "Wednesday": "Breakfast: 3 Scrambled Eggs in 1 tsp Ghee + 2 Slices Whole Wheat Bread + 5 Almonds & 2 Walnuts. | Lunch: Mutton Keema Gravy + 2 Rotis + Curd Raita. | Evening Snack: Roasted Pumpkin Seeds + 2 Boiled Egg Whites + Half Avocado. | Dinner: Chicken Clear Soup + 150g Baked Fish + Steamed Broccoli/Carrot.",
-        "Thursday": "Breakfast: Oats cooked with 3 Egg Whites + 1 Banana + 1 tbsp Peanut Butter. | Lunch: Egg Curry (2 Whole Eggs cooked in Coconut Oil) + Rice/Roti + Cabbage & Onion Sabzi. | Evening Snack: Chicken Salad (Leftover chicken pieces + Lemon + Cucumber). | Dinner: Soya Chunks and Egg White Combo Rice + Mixed Vegetable Raita.",
-        "Friday": "Breakfast: 3 Egg White Omelette with Spinach + 1 Glass Fresh Lassi + 5 Almonds. | Lunch: Chicken Biryani (Controlled oil) + 1 Big Bowl High-Fibre Cucumber Raita. | Evening Snack: Roasted Chana + 2 Boiled Egg Whites. | Dinner: Fish Fry (Tawa fried in Coconut Oil) + 2 Whole Wheat Chapatis + Salad.",
-        "Saturday": "Breakfast: Sattu Shake + 2 Whole Boiled Eggs + 2 Walnuts. | Lunch: Black Chana Dal + 150g Boneless Chicken Gravy cooked in 1 tsp Ghee + Brown Rice. | Evening Snack: Mixed Seeds + Half Avocado. | Dinner: Minced Meat (Keema) Curry + 2 Rotis + Tossed High-Fibre Salad.",
-        "Sunday": "Breakfast: 3 Eggs Omelette with Mushrooms & 1 tsp Ghee + 2 Toast Slices with Peanut Butter. | Lunch: Homestyle Mutton/Chicken Gravy + Rice + Sliced Beetroot & Onion High-Fibre Salad. | Evening Snack: 1 Cup Plain Curd + 30g Almonds. | Dinner: Baked Chicken Chunks + Veggie Salad + Warm Turmeric Milk."
+        "Monday": "3 Whole Boiled Eggs + Chicken Breast (150g Gravy) + 3 Egg White Scramble + Homestyle Fish Curry.",
+        "Tuesday": "Chicken Keema Stuffed Roti + 3 Egg White Omelette cooked in Coconut Oil + Grilled/Tandoori Chicken Chunks.",
+        "Wednesday": "3 Scrambled Eggs in 1 tsp Ghee + Mutton Keema Gravy + Chicken Clear Soup + 150g Baked Fish.",
+        "Thursday": "Oats cooked with 3 Egg Whites + Egg Curry (2 Whole Eggs) + Soya Chunks and Egg White Combo Rice.",
+        "Friday": "3 Egg White Omelette with Spinach + Chicken Biryani (Controlled oil) + Tawa Fish Fry + High-Fibre Salad.",
+        "Saturday": "Sattu Shake + 2 Whole Boiled Eggs + 150g Boneless Chicken Gravy + Minced Meat (Keema) Curry.",
+        "Sunday": "3 Eggs Omelette with Mushrooms + Homestyle Mutton/Chicken Gravy + Baked Chicken Chunks + Salad Structure."
     }
 }
 
@@ -129,7 +186,6 @@ if "show_reg_portal" not in st.session_state:
 # --- Isolated Core Authentication Gateway ---
 if not st.session_state.auth["login"]:
     st.markdown("<h1 class='svb2-title'>🧬 SVB2 — Secure Core Health Panel</h1>", unsafe_allow_html=True)
-    
     st.markdown("### 🔒 Secure Platform Authorization")
     u_in = st.text_input("User ID Token", key="l_user")
     p_in = st.text_input("Secure Keyphrase", type="password", key="l_pass")
@@ -145,8 +201,7 @@ if not st.session_state.auth["login"]:
             st.error("Invalid Authentication Parameters Provided.")
             
     st.write("---")
-    
-    if st.button("⚠️ Core Platform Node: Toggle Registration Portal", help="Click to open or close Admin/User provisioning interface layer."):
+    if st.button("⚠️ Core Platform Node: Toggle Registration Portal"):
         st.session_state.show_reg_portal = not st.session_state.show_reg_portal
         st.rerun()
         
@@ -155,19 +210,27 @@ if not st.session_state.auth["login"]:
         st.markdown("### 📝 Internal Registry Gateway Node")
         u_rg = st.text_input("Create Handle ID", key="r_user")
         p_rg = st.text_input("Create Password", type="password", key="r_pass")
+        
+        # FIX: Admin registration security gate with safe validation override token
         r_rl = st.selectbox("Baseline Authority Tier Assignment", ["User", "Admin"])
+        admin_passkey = ""
+        if r_rl == "Admin":
+            admin_passkey = st.text_input("Enter Infrastructure Admin Authorization Token", type="password")
         
         if st.button("Commit Account Registry to DB"):
             if u_rg and p_rg:
-                try:
-                    c = conn.cursor()
-                    c.execute("INSERT INTO system_users (username, password, role) VALUES (?, ?, ?)", (u_rg, encrypt_pass(p_rg), r_rl))
-                    conn.commit()
-                    st.success(f"Success! Account Handle `{u_rg}` registered under tier `{r_rl}`. Toggle close and log in.")
-                except sqlite3.IntegrityError: 
-                    st.error("Handle registration conflict. Pick another system handle token identifier.")
+                if r_rl == "Admin" and admin_passkey != "SVB2_SECURE_ADMIN_2026":
+                    st.error("Unauthorized Admin Key Verification Failure. Registration aborted.")
+                else:
+                    try:
+                        c = conn.cursor()
+                        c.execute("INSERT INTO system_users (username, password, role) VALUES (?, ?, ?)", (u_rg, encrypt_pass(p_rg), r_rl))
+                        conn.commit()
+                        st.success(f"Success! Account Handle `{u_rg}` registered as `{r_rl}`.")
+                    except sqlite3.IntegrityError: 
+                        st.error("Handle registration conflict.")
             else:
-                st.warning("All input handle key data vectors required.")
+                st.warning("All data vectors required.")
         st.markdown("</div>", unsafe_allow_html=True)
 
 else:
@@ -195,26 +258,33 @@ else:
         with in_col:
             st.markdown("<h4 class='svb2-title'>📋 Biometric Inputs</h4>", unsafe_allow_html=True)
             g = st.radio("Biological Gender", ["Male", "Female"], horizontal=True)
-            a = st.slider("Age Track Range", 16, 95, 26)
-            h = st.number_input("Absolute Height (cm)", min_value=120, max_value=240, value=173)
-            w = st.number_input("Recorded Body Mass (kg)", min_value=32, max_value=260, value=90)
+            
+            # FIX: Tightened input validation bounds to secure algorithm matrix data safety
+            a = st.slider("Age Track Range", 18, 90, 26)
+            h = st.number_input("Absolute Height (cm)", min_value=130.0, max_value=230.0, value=173.0, step=0.5)
+            w = st.number_input("Recorded Body Mass (kg)", min_value=40.0, max_value=200.0, value=90.0, step=0.5)
+            
+            # FIX: Integrated User Activity mapping metric inputs
+            act_level = st.selectbox("Current Activity Metric Level", ["Sedentary (Office Desk Job)", "Light Activity (1-3 days/wk)", "Moderate Activity (3-5 days/wk)", "Active Elite (6-7 days/wk)"])
+            
             gl = st.selectbox("Primary Physical Matrix Target", ["Weight Loss", "Maintain Weight", "Muscle Gain"])
             dt = st.radio("Diet Choice Framework", ["Veg", "Non-Veg"], horizontal=True)
             
             st.write("---")
+            st.markdown("<h4 class='svb2-title'>🕒 Professional Shift Configuration</h4>", unsafe_allow_html=True)
+            selected_shift = st.selectbox(
+                "Select Current Active Professional Shift Matrix",
+                ["Morning Shift (6:00 AM - 3:00 PM)", "Afternoon Shift (2:00 PM - 11:00 PM)", "Evening Shift (5:30 PM - 3:00 AM)", "Night Shift (10:00 PM - 7:00 AM)"]
+            )
+            
+            st.write("---")
             st.markdown("<h4 class='svb2-title'>🧠 Neuro-Somatic Inputs</h4>", unsafe_allow_html=True)
             stress = st.select_slider("Subjective Chronic Stress Levels", ["Low", "Moderate (Normal)", "High - Burnout Phase"])
-            sleep_hrs = st.slider("Average Circadian Sleep Cycles (Hours)", 4, 10, 7)
-            
-            meds = st.multiselect(
-                "Diagnosed Pathological Markers",
-                ["None", "Poor Digestion / Gut Dysbiosis", "Chronic Fatigue Syndrome", "Hair Thinning / Alopecia", "Low Energy Levels"]
-            )
+            meds = st.multiselect("Diagnosed Pathological Markers", ["None", "Poor Digestion / Gut Dysbiosis", "Chronic Fatigue Syndrome", "Hair Thinning / Alopecia", "Low Energy Levels"])
 
         with view_col:
             st.markdown("<h4 class='svb2-title'>📊 Automated Target Quantities</h4>", unsafe_allow_html=True)
             
-            # Formulating Calculations
             h_m_unit = h / 100
             calculated_bmi = round(w / (h_m_unit ** 2), 1)
             
@@ -223,7 +293,15 @@ else:
             else: 
                 base_bmr = int((10 * w) + (6.25 * h) - (5 * a) - 161)
             
-            calculated_tdee = int(base_bmr * 1.4) 
+            # FIX: Real-time dynamic activity scaling dictionary pipeline mapping
+            activity_map = {
+                "Sedentary (Office Desk Job)": 1.2,
+                "Light Activity (1-3 days/wk)": 1.375,
+                "Moderate Activity (3-5 days/wk)": 1.55,
+                "Active Elite (6-7 days/wk)": 1.725
+            }
+            multiplier = activity_map[act_level]
+            calculated_tdee = int(base_bmr * multiplier) 
             
             if gl == "Weight Loss": 
                 target_cal = calculated_tdee - 450
@@ -232,17 +310,21 @@ else:
             else: 
                 target_cal = calculated_tdee
             
-            # --- FIXED SECURE MATHEMATICAL MACRO ALLOCATION LOGIC ---
-            # 1. Protein gets absolute 30% of Total Daily Target Calories (1g Protein = 4 kcal)
-            prot_cal = target_cal * 0.30
+            # FIX: Goal-Based Dynamic Macronutrient Percent Splits
+            if gl == "Weight Loss":
+                prot_pct, fat_pct = 0.40, 0.25   # High Protein Fat Loss Targeting
+            elif gl == "Muscle Gain":
+                prot_pct, fat_pct = 0.30, 0.25   # Carb Loaded Glycogen Driving Split
+            else:
+                prot_pct, fat_pct = 0.30, 0.30   # Perfect Equilibrium Baseline Split
+                
+            prot_cal = target_cal * prot_pct
             prot_target = int(prot_cal / 4)
             
-            # 2. Fats get absolute 25% of Total Daily Target Calories (1g Fat = 9 kcal)
-            fat_cal = target_cal * 0.25
+            fat_cal = target_cal * fat_pct
             fat_target = int(fat_cal / 9)
             
-            # 3. Carbohydrates get the exact absolute remainder of calories (1g Carbs = 4 kcal)
-            # This ensures (Carbs*4 + Protein*4 + Fats*9) completely sums up precisely to target_cal!
+            # Remainder calculation mechanics eliminate macro allocation rounding errors cleanly
             carb_cal = target_cal - (prot_target * 4) - (fat_target * 9)
             carb_target = int(carb_cal / 4)
             
@@ -253,229 +335,126 @@ else:
             grid_3.markdown(f"<div class='svb2-card'><div class='svb2-muted'>TDEE Burn</div><div class='svb2-metric-val'>{calculated_tdee} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
             grid_4.markdown(f"<div class='svb2-card' style='border: 2px solid var(--svb2-highlight) !important;'><div class='svb2-muted' style='color:var(--svb2-highlight); font-weight:bold;'>Target Intake</div><div class='svb2-metric-val' style='color:var(--svb2-highlight);'>{target_cal} <span style='font-size:0.8rem;'>kcal</span></div></div>", unsafe_allow_html=True)
             
-            st.info(f"💡 **Calculated Precise Chunks:** Protein: `{prot_target}g` ({int(prot_target*4)} kcal) | Carbohydrates: `{carb_target}g` ({int(carb_target*4)} kcal) | Fats: `{fat_target}g` ({int(fat_target*9)} kcal) &rarr; **Total Sum Check:** `{int(prot_target*4 + carb_target*4 + fat_target*9)} kcal` / `{target_cal} kcal`")
+            st.info(f"💡 **Dynamic Allocation ({gl}):** Protein: `{int(prot_pct*100)}%` ({prot_target}g) | Carbs: `{100 - int(prot_pct*100) - int(fat_pct*100)}%` ({carb_target}g) | Fats: `{int(fat_pct*100)}%` ({fat_target}g) &rarr; **Equivalence Sync:** `{int(prot_target*4 + carb_target*4 + fat_target*9)} / {target_cal} kcal`")
             
-            # --- Workout & Cardio Programs Integration Module ---
+            # --- DYNAMIC DIET TIMESTAMPS GENERATION GRID ---
+            st.write("---")
+            st.markdown(f"<h3 style='color: var(--svb2-highlight);'>🕒 Circadian Allocation Schedule: {selected_shift} ({dt})</h3>", unsafe_allow_html=True)
+            
+            shift_node = SHIFT_TIMELINE_DATABASE[selected_shift]
+            
+            col_s1, col_s2 = st.columns(2)
+            col_s1.markdown(f"<div class='svb2-card' style='border-top: 4px solid #3b82f6;'><b>Optimal Recovery Sleep Window:</b><br>{shift_node['Sleep Window']}</div>", unsafe_allow_html=True)
+            col_s2.markdown(f"<div class='svb2-card' style='border-top: 4px solid #ec4899;'><b>Optimal Muscle Training Window:</b><br>{shift_node['Exercise Window']}</div>", unsafe_allow_html=True)
+            
+            # FIX: User Diet Choice filter logic is now fully bound to shift timestamps maps
+            st.markdown("#### 🍴 Daily Chrono-Nutrition Structured Timestamps:")
+            active_diet_timestamps = shift_node["Timestamps"][dt]
+            for current_stamp in active_diet_timestamps:
+                st.markdown(f"<div class='svb2-badge'>{current_stamp}</div>", unsafe_allow_html=True)
+
+            # --- WEEKLY NUTRITION LOOKUP PLATFORM (FIX: Dead Code Prevention Injection) ---
+            st.write("---")
+            st.markdown(f"<h4 class='svb2-title'>📅 Integrated 7-Day Macro Blueprint Plan ({dt} Selection)</h4>", unsafe_allow_html=True)
+            with st.expander("Click to unlock full Weekly Micro Cycle Distribution matrix"):
+                for active_day, macro_meal_plan in INDIAN_7DAY_CORE[dt].items():
+                    st.markdown(f"📌 **{active_day}:** {macro_meal_plan}")
+
+            # --- Workout Programs Integration Module ---
             st.write("---")
             st.markdown("<h4 class='svb2-title'>🏋️‍♂️ SVB2 Integrated Physical Transformation Mechanics</h4>", unsafe_allow_html=True)
-            
-            w_tabs = st.tabs(["💪 5-Day PPL Custom Split", "🏃‍♂️ Cardio & Stamina Protocol", "🏸 Competitive Sports Integration"])
+            w_tabs = st.tabs(["💪 Custom Workout PPL Split", "🏃‍♂️ Cardio & Stamina Protocol", "💊 Supplement Matrix"])
             
             if gl == "Weight Loss":
-                focus_title = "Metabolic Conditioning PPL (Fat Loss + Endurance)"
-                rep_text_1 = "15-25+ reps"
-                rep_text_2 = "High reps/Supersets (12-15 reps)"
-                rest_limit = "30–45 sec short recovery"
+                focus_title = "Metabolic Conditioning PPL (Fat Loss + Endurance Optimization)"
+                rep_text_1 = "15-25+ repetitions protocol range"
+                rep_text_2 = "High density supersets (12-15 reps)"
             else:
-                focus_title = "Powerbuilding / Hypertrophy PPL (Strength + Size Volume)"
-                rep_text_1 = "3x6-8 heavy load parameters"
-                rep_text_2 = "3x8-12 hyper load hypertrophy sets"
-                rest_limit = "60–90 sec rest tracking"
+                focus_title = "Powerbuilding / Hypertrophy PPL (Volume Loading + Density)"
+                rep_text_1 = "3x6-8 heavy strength compound sets"
+                rep_text_2 = "3x8-12 localized volume arrays"
                 
             with w_tabs[0]:
                 st.markdown(f"""
-                <div class='svb2-badge'>
-                    <b>⚡ 5-Day Professional Dynamic Routine Layout (Push-Pull-Legs-Push-Pull):</b>
-                    <br><b>Current Protocol Focus:</b> {focus_title} | <b>Target Rest Window:</b> {rest_limit}
-                </div>
-                <div class='svb2-workout-line'>🔹 <b>Monday (Push 1):</b> Chest, shoulders, triceps — Flat Bench Press ({rep_text_1}), Standing Overhead Barbell Press ({rep_text_1}), Incline Dumbbell Flyes (3×10-12), Cable Triceps Pushdowns (3×12-15)</div>
-                <div class='svb2-workout-line'>🔹 <b>Tuesday (Pull 1):</b> Back, biceps, rear delts — Conventional Deadlifts or Rack Pulls ({rep_text_1}), Weighted Pull-ups/Lat Pulldowns (3×8-10), Chest-Supported Rows (3×10-12), Standing Barbell Biceps Curls (3×8-12), Face Pulls (3×15)</div>
-                <div class='svb2-workout-line'>🔹 <b>Wednesday (Legs):</b> Muscles: Quads, hamstrings, glutes, calves — Barbell Squats ({rep_text_1}), Romanian Deadlifts (RDLs) ({rep_text_1}), Hack Squats / Leg Press (3×8-10), Lying Leg Curls (3×10-12), Standing Calf Raises (4×15)</div>
-                
-                <div class='svb2-workout-line' style='font-weight:bold; border-bottom: 1px dashed var(--svb2-border); padding-bottom:4px; margin-top:15px;'>🔹 Thursday (Push 2 - Variety Hypertrophy Split):</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Incline Dumbbell Press</i> ({rep_text_2}) &rarr; <b>Target:</b> Upper Chest Head</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Seated Dumbbell Shoulder Press</i> ({rep_text_2}) &rarr; <b>Target:</b> Anterior/Front Deltoid</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Decline Cable Flyes / Dips</i> (3×12) &rarr; <b>Target:</b> Lower Chest Lower Pectoralis Head</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Dumbbell Lateral Raises</i> (4×12-15) &rarr; <b>Target:</b> Side/Lateral Shoulder Cap</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Overhead Dumbbell Triceps Extensions</i> (3×10-12) &rarr; <b>Target:</b> Triceps Long Head movement</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Rope Pushdowns / Diamond Pushups</i> (3×12-15) &rarr; <b>Target:</b> Lateral & Medial Triceps Head</div>
-                
-                <div class='svb2-workout-line' style='font-weight:bold; border-bottom: 1px dashed var(--svb2-border); padding-bottom:4px; margin-top:15px;'>🔹 Friday (Pull 2 - Width & Depth Volume Split):</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Close-Grip Lat Pulldowns</i> ({rep_text_2}) &rarr; <b>Target:</b> Lat Width & Lower Insertion</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Barbell T-Bar Rows / Bent-Over Rows</i> ({rep_text_2}) &rarr; <b>Target:</b> Upper Back Thickness & Rhomboids</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Single-Arm Dumbbell Rows</i> (3×10) &rarr; <b>Target:</b> Unilateral Lat Depth Isolation</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Incline Dumbbell Biceps Curls</i> (3×10-12) &rarr; <b>Target:</b> Biceps Long Head Peak Movement</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Hammer Curls (Rope or DB)</i> (3×10-12) &rarr; <b>Target:</b> Brachioradialis Forearm & Brachialis Thickness</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Seated Rear Delt Dumbbell Flyes</i> (4×15) &rarr; <b>Target:</b> Posterior Shoulder Head</div>
-                <div class='svb2-workout-line' style='padding-left:15px;'>• <i>Hyperextensions / Good Mornings</i> (3×12) &rarr; <b>Target:</b> Lower Back Spinal Erectors Integration</div>
-                
-                <div class='svb2-workout-line' style='color:var(--svb2-muted); font-style: italic; margin-top:15px;'>⚠️ <b>Saturday & Sunday:</b> Rest and Systematic Recovery Cycles.</div>
+                <div class='svb2-badge'><b>Current Training Protocol Focus:</b> {focus_title} | <b>Target Active Interval window:</b> {shift_node['Exercise Window']}</div>
+                <div class='svb2-workout-line'>🔹 <b>Monday (Push 1):</b> Chest, shoulders, triceps — Flat Bench Press ({rep_text_1}), Overhead Press ({rep_text_1}), Incline Dumbbell Flyes (3×12)</div>
+                <div class='svb2-workout-line'>🔹 <b>Tuesday (Pull 1):</b> Back, biceps — Conventional Deadlifts ({rep_text_1}), Lat Pulldowns (3×10), Barbell Biceps Curls (3×12)</div>
+                <div class='svb2-workout-line'>🔹 <b>Wednesday (Legs):</b> Quads, hamstrings — Barbell Squats ({rep_text_1}), Romanian Deadlifts (3×10), Calf Raises (4×15)</div>
+                <div class='svb2-workout-line'>🔹 <b>Thursday (Push 2):</b> Incline DB Press ({rep_text_2}), Seated DB Shoulder Press ({rep_text_2}), DB Lateral Raises (4×15)</div>
+                <div class='svb2-workout-line'>🔹 <b>Friday (Pull 2):</b> Close-Grip Lat Pulldowns ({rep_text_2}), T-Bar Rows ({rep_text_2}), Incline DB Biceps Curls (3×12)</div>
                 """, unsafe_allow_html=True)
                 
             with w_tabs[1]:
                 st.markdown("""
-                <div class='svb2-badge'>
-                    <b>🏃‍♂️ Strategic Caloric Burn & Respiratory Endurance:</b>
-                </div>
-                <div class='svb2-workout-line'>🏃‍♂️ <b>LISS Cardio:</b> 35 Minutes of Incline Treadmill Walking (Speed: 5.0 km/h, Incline: 6%-8%)</div>
-                <div class='svb2-workout-line'>🚴‍♂️ <b>HIIT Cardio:</b> 15 Minutes Stationary Cycle Matrix — 30s sprint / 60s slow recovery pace</div>
-                <div class='svb2-workout-line'>👣 <b>Circadian Baseline Step Metrics:</b> Maintain a strict floor of 8,000 to 10,000 tracked steps daily</div>
+                <div class='svb2-workout-line'>🏃‍♂️ <b>LISS Cardio:</b> 35 Minutes of Incline Treadmill Walking (Speed: 5.0 km/h, Incline: 6%-8%) immediately after strength routines.</div>
+                <div class='svb2-workout-line'>🚴‍♂️ <b>HIIT Cardio:</b> 15 Minutes Stationary Cycle Matrix — 30s sprint / 60s recovery tracking loops.</div>
                 """, unsafe_allow_html=True)
                 
             with w_tabs[2]:
-                st.markdown("""
-                <div class='svb2-badge'>
-                    <b>🏸 Functional Athletics & Neuromuscular Reflex Vectors:</b>
-                </div>
-                <div class='svb2-workout-line'>🏸 <b>Recommended Sports Structure:</b> Badminton / Squash or Swimming. Play for 45-60 minutes on Wednesday or Sunday.</div>
-                """, unsafe_allow_html=True)
-
-            # --- DYNAMIC BUDGET SUPPLEMENTS LOGIC ENGINE ---
-            st.write("---")
-            st.markdown("<h4 class='svb2-title'>💊 Algorithmic Post-Workout Budget Supplement Matrix (India Available)</h4>", unsafe_allow_html=True)
-            
-            supp_list = [
-                {"Name": "Raw Whey Protein Concentrate", "Timing": "Within 30 mins Post-Workout", "Dosage": "1 Scoop (approx. 24g-25g protein)", "Purpose": "Muscle tissue repair & immediate recovery acceleration.", "Budget_Brand": "Asitis Nutrition Raw / Nakpro Platinum (Approx. ₹1100-1400/kg)"}
-            ]
-            
-            if gl == "Muscle Gain":
-                supp_list.append({"Name": "Creatine Monohydrate (Micronized)", "Timing": "Post-Workout with Whey or high carb meal", "Dosage": "3g daily continuously", "Purpose": "ATP Resynthesis, cellular hydration & power output scaling.", "Budget_Brand": "Asitis Pure / MuscleBlaze Powder (Approx. ₹500-600 per 250g)"})
-            
-            if "Poor Digestion / Gut Dysbiosis" in meds:
-                supp_list.append({"Name": "Multi-Strain Probiotics & Enzymes", "Timing": "With Lunch / First meal", "Dosage": "1 Capsule daily (25-30 Billion CFU)", "Purpose": "Enhance nutrient absorption mechanics & alleviate bloating.", "Budget_Brand": "HealthKart VKare / Himalayan Organics (Approx. ₹400-500)"})
+                supp_list = [{"Name": "Raw Whey Protein Concentrate", "Timing": "Post-Workout Session Window", "Dosage": "1 Scoop (24g Protein)", "Budget_Brand": "Asitis Nutrition Raw / Nakpro Platinum"}]
+                if gl == "Muscle Gain":
+                    supp_list.append({"Name": "Creatine Monohydrate", "Timing": "Post-Workout with shaker", "Dosage": "3g daily continuously", "Budget_Brand": "Asitis Pure Powder"})
+                if "Poor Digestion / Gut Dysbiosis" in meds:
+                    supp_list.append({"Name": "Probiotics & Digestive Enzymes", "Timing": "With Lunch / First Main Meal", "Dosage": "1 Capsule daily", "Budget_Brand": "HealthKart / Himalayan Organics"})
                 
-            if "Chronic Fatigue Syndrome" in meds or stress == "High - Burnout Phase":
-                supp_list.append({"Name": "Ashwagandha (KSM-66 Extract)", "Timing": "Pre-bed with warm water or milk", "Dosage": "300mg - 500mg daily", "Purpose": "Cortisol regulation, dynamic stress reduction & deep sleep support.", "Budget_Brand": "Himalaya Ashwagandha / Organic India (Approx. ₹180-250)"})
-                
-            if "Hair Thinning / Alopecia" in meds:
-                supp_list.append({"Name": "Biotin + Zinc & Multi-minerals", "Timing": "After Breakfast", "Dosage": "1 Tablet daily", "Purpose": "Keratin protein synthesis acceleration & follicular reinforcement.", "Budget_Brand": "HealthKart Multivitamin with Biotin / Carbamide Forte (Approx. ₹350-450)"})
-            
-            if a >= 40:
-                supp_list.append({"Name": "Omega-3 Fish Oil (High EPA/DHA) & Glucosamine", "Timing": "With Dinner", "Dosage": "1-2 Softgels daily", "Purpose": "Joint lubricating support, reduced systemic inflammation & cardiovascular care.", "Budget_Brand": "Wow Life Science / TrueBasics Budget packs (Approx. ₹450-600)"})
-            else:
-                supp_list.append({"Name": "Daily Budget Multivitamin-Mineral Spectrum", "Timing": "After Breakfast", "Dosage": "1 Tablet daily", "Purpose": "Fill trace micronutrient deficiencies caused by high training output.", "Budget_Brand": "Zincovit / HealthKart Multivitamin (Approx. ₹110-300)"})
+                for supp in supp_list:
+                    st.markdown(f"<div class='svb2-badge' style='border-left: 6px solid #ef4444 !important;'><b>⚡ {supp['Name']}</b> ({supp['Dosage']})<br/>⏰ Timing: {supp['Timing']} | Recommended Baseline Vendor: {supp['Budget_Brand']}</div>", unsafe_allow_html=True)
 
-            for supp in supp_list:
-                with st.container():
-                    st.markdown(f"""
-                    <div class='svb2-badge' style='border-left: 6px solid #ef4444 !important;'>
-                        <b style='font-size:1.1rem;'>⚡ {supp['Name']}</b> | ⏰ Timing: <code>{supp['Timing']}</code>
-                        <br>• <b>Recommended Dosage:</b> {supp['Dosage']}
-                        <br>• <b>Biological Purpose:</b> {supp['Purpose']}
-                        <br>• <b>Budget Friendly Option:</b> <span style='color:#059669; font-weight:bold;'>{supp['Budget_Brand']}</span>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-            st.write("---")
-            st.markdown("<h4 class='svb2-title'>🩺 Integrated Holistic Protocols</h4>", unsafe_allow_html=True)
-            
-            if "Poor Digestion / Gut Dysbiosis" in meds:
-                st.markdown("<div class='svb2-badge'><b>🥣 Gut Microbiome & Digestion Optimization:</b> Increase fermented enzymes. Consume 150g home-made Curd (Dahi) or Buttermilk twice daily.</div>", unsafe_allow_html=True)
-            
-            if "Hair Thinning / Alopecia" in meds or gl == "Weight Loss":
-                st.markdown("<div class='svb2-badge'><b>💇‍♀️ Follicle Density & Hair Growth Protocol:</b> Hair structure requires Keratin protein. Ensure your daily iron and zinc metrics are protected.</div>", unsafe_allow_html=True)
-
-            h2o_target = round((w * 35) / 1000, 1)
-            st.success(f"💧 **Hydration Command:** Drink exactly **{h2o_target} Liters** of filtered water daily.")
-
-            # Display Planned Data Matrices
-            st.write("---")
-            st.markdown("<h4 class='svb2-title'>📅 High-Protein Economical 7-Day Indian Routine</h4>", unsafe_allow_html=True)
-            current_diet_matrix = INDIAN_7DAY_CORE[dt]
-            for day_node, diet_description in current_diet_matrix.items():
-                with st.expander(f"📅 View Menu Parameters for {day_node}"):
-                    st.write(diet_description.replace(" | ", "\n\n"))
-
-            # --- Master PDF Blueprint Compilation Execution ---
+            # Master PDF Download Gateway
             st.write("---")
             st.markdown("<h4 class='svb2-title'>📑 Master Blueprint Download Gateway</h4>", unsafe_allow_html=True)
-            pdf_out_name = f"{usr}_svb2_master_report.pdf"
+            pdf_out_name = f"{usr}_svb2_chrono_report.pdf"
             
-            if st.button("📑 Generate Master PDF Health & Workout Blueprint"):
+            if st.button("📑 Generate Master PDF Health & Shift Blueprint"):
                 doc_file = SimpleDocTemplate(pdf_out_name, pagesize=letter, rightMargin=30, leftMargin=30, topMargin=30, bottomMargin=30)
                 styles_setup = getSampleStyleSheet()
                 
-                style_header = ParagraphStyle('DocHeader', parent=styles_setup['Heading1'], fontSize=22, textColor=colors.HexColor('#059669'), spaceAfter=15)
-                style_section = ParagraphStyle('DocSec', parent=styles_setup['Heading2'], fontSize=14, textColor=colors.HexColor('#1e293b'), spaceBefore=12, spaceAfter=6)
-                style_body = ParagraphStyle('DocBody', parent=styles_setup['Normal'], fontSize=10, leading=16, spaceAfter=8)
+                style_header = ParagraphStyle('DocHeader', parent=styles_setup['Heading1'], fontSize=20, textColor=colors.HexColor('#059669'), spaceAfter=15)
+                style_section = ParagraphStyle('DocSec', parent=styles_setup['Heading2'], fontSize=13, textColor=colors.HexColor('#1e293b'), spaceBefore=10, spaceAfter=5)
+                style_body = ParagraphStyle('DocBody', parent=styles_setup['Normal'], fontSize=9, leading=15, spaceAfter=6)
                 
                 elements_flow = [
-                    Paragraph(f"SVB2 MASTER HEALTH & FITNESS BLUEPRINT", style_header),
-                    Paragraph(f"<b>Generated On:</b> {datetime.now().strftime('%Y-%m-%d %H:%M')}", style_body),
-                    Paragraph(f"<b>User Profile:</b> {usr} | <b>Gender:</b> {g} | <b>Age:</b> {a} years", style_body),
+                    Paragraph(f"SVB2 CHRONO-NUTRITION & WORKOUT MASTER REPORT", style_header),
+                    Paragraph(f"<b>Generated Account Token:</b> {usr} | <b>Active Track Profile:</b> {selected_shift} ({dt})", style_body),
                     Spacer(1, 10),
                 ]
                 
-                # SECTION 1: CORE BIOMETRIC METRICS TABLE
-                elements_flow.append(Paragraph("1. Calculated Caloric & Macro Allocation", style_section))
+                # METRICS TABLE
+                elements_flow.append(Paragraph("1. Precise Algorithmic Macro Metrics Verification", style_section))
                 metric_table_data = [
-                    ["Metric Parameter", "Target Allocation Value"],
-                    ["Current BMI Index", f"{calculated_bmi}"],
-                    ["Basal Metabolic Rate (BMR)", f"{base_bmr} kcal"],
-                    ["Total Daily Energy Expenditure (TDEE)", f"{calculated_tdee} kcal"],
-                    ["Target Daily Caloric Intake", f"{target_cal} kcal"],
-                    ["Protein Target Split", f"{prot_target} g"],
-                    ["Carbohydrates Target Split", f"{carb_target} g"],
-                    ["Fats Target Split", f"{fat_target} g"]
+                    ["Biometric Param Name", "Calculated Balanced Value"],
+                    ["Calculated Target Calories Split", f"{target_cal} kcal"],
+                    ["Calculated Precise Protein Target", f"{prot_target} g ({int(prot_target*4)} kcal)"],
+                    ["Calculated Precise Carbohydrates Target", f"{carb_target} g ({int(carb_target*4)} kcal)"],
+                    ["Calculated Precise Fats Target", f"{fat_target} g ({int(fat_target*9)} kcal)"]
                 ]
                 t_metrics = Table(metric_table_data, colWidths=[230, 230])
                 t_metrics.setStyle(TableStyle([
                     ('BACKGROUND', (0,0), (1,0), colors.HexColor('#059669')),
                     ('TEXTCOLOR', (0,0), (1,0), colors.whitesmoke),
-                    ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-                    ('FONTNAME', (0,0), (1,0), 'Helvetica-Bold'),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 6),
-                    ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#f8fafc')),
                     ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 5),
                 ]))
                 elements_flow.append(t_metrics)
-                elements_flow.append(Spacer(1, 12))
-                
-                # SECTION 2: SUPPLEMENTS MATRIX GENERATION
-                elements_flow.append(Paragraph("2. Tailored Post-Workout & Budget Supplement Stack (India Safe)", style_section))
-                supp_table_data = [["Supplement Name", "Timing & Dose", "Clinical Purpose & Budget Indian Brand"]]
-                for s in supp_list:
-                    desc_para = f"<b>Purpose:</b> {s['Purpose']}<br/><b>Recommended Choice:</b> {s['Budget_Brand']}"
-                    supp_table_data.append([s['Name'], f"{s['Timing']}\n\n({s['Dosage']})", Paragraph(desc_para, style_body)])
-                
-                t_supp = Table(supp_table_data, colWidths=[120, 120, 220])
-                t_supp.setStyle(TableStyle([
-                    ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#ef4444')),
-                    ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
-                    ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-                    ('VALIGN', (0,0), (-1,-1), 'TOP'),
-                    ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 6),
-                    ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
-                ]))
-                elements_flow.append(t_supp)
-                elements_flow.append(Spacer(1, 12))
-                
-                # SECTION 3: INTEGRATED PHYSICAL TRANSFORMATION WORKOUT MATRIX
-                elements_flow.append(Paragraph("3. Resistance Training & Cardio Splits Blueprint", style_section))
-                workout_text = f"""
-                <b>A. 5-Day Custom Workout Target System (Phase: {gl}):</b><br/>
-                • <b>Workout Focus Type:</b> {focus_title} | <b>Rest Limits:</b> {rest_limit}<br/><br/>
-                • <b>Monday (Push 1):</b> Flat Bench, Shoulder Press, Flyes, Triceps Pushdowns<br/>
-                • <b>Tuesday (Pull 1):</b> Deadlifts/Rack Pulls, Lat Pulldowns, Rows, Barbell Curls, Face Pulls<br/>
-                • <b>Wednesday (Legs):</b> Barbell Squats, RDLs, Hack Squats/Leg Press, Lying Leg Curls, Calves<br/><br/>
-                • <b>Thursday (Push 2 Variety):</b> Incline DB Press (Upper Chest), Seated DB Shoulder Press (Front Delt), Decline Cable Flyes/Dips (Lower Chest), DB Lateral Raises (Side Delt Cap), Overhead DB Extensions (Triceps Long Head), Rope Pushdowns (Lateral/Medial Heads)<br/><br/>
-                • <b>Friday (Pull 2 Volume):</b> Close-Grip Lat Pulldowns (Width), T-Bar Rows (Upper Back Thickness), Single-Arm DB Rows (Isolation Depth), Incline DB Curls (Biceps Peak), Hammer Curls (Forearms/Brachialis), Seated Rear Delt Flyes (Back Shoulder Head), Hyperextensions (Lower Back Erectors)<br/><br/>
-                <b>B. Stamina & Cardio Framework:</b><br/>
-                • LISS Cardio: 35 Mins Incline Treadmill Walking daily post weight sessions.<br/>
-                • HIIT Cardio: 15 Mins Stationary Cycling (30s sprint / 60s recovery).
-                """
-                elements_flow.append(Paragraph(workout_text, style_body))
                 elements_flow.append(Spacer(1, 10))
                 
-                # SECTION 4: DIET ROUTINE ASSIGNMENTS
-                elements_flow.append(Paragraph("4. Economical 7-Day Nutritional Routine Log", style_section))
-                diet_table_data = [["Day Node", f"Planned Plan Matrix Breakdown ({dt})"]]
-                for day, desc in current_diet_matrix.items():
-                    clean_desc = desc.replace(" | ", "<br/><br/>")
-                    diet_table_data.append([day, Paragraph(clean_desc, style_body)])
-                
-                t_diet = Table(diet_table_data, colWidths=[70, 430])
-                t_diet.setStyle(TableStyle([
-                    ('BACKGROUND', (0,0), (1,0), colors.HexColor('#1e293b')),
-                    ('TEXTCOLOR', (0,0), (1,0), colors.whitesmoke),
-                    ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-                    ('VALIGN', (0,0), (-1,-1), 'TOP'),
-                    ('FONTNAME', (0,0), (1,0), 'Helvetica-Bold'),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+                # SHIFT PROTOCOL TABLE
+                elements_flow.append(Paragraph(f"2. Daily Chrono-Nutrition Timeline Structure ({selected_shift})", style_section))
+                shift_table_data = [["Interval Window Node", "Target Metric/Timestamp Execution"]]
+                shift_table_data.append(["Optimal Sleep Hours", shift_node['Sleep Window']])
+                shift_table_data.append(["Optimal Exercise Hour", shift_node['Exercise Window']])
+                for index_st, stamp_st in enumerate(active_diet_timestamps):
+                    shift_table_data.append([f"Meal Slot Node {index_st+1}", stamp_st])
+                    
+                t_shift = Table(shift_table_data, colWidths=[130, 330])
+                t_shift.setStyle(TableStyle([
+                    ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1e293b')),
+                    ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
                     ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
+                    ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 5),
                 ]))
-                elements_flow.append(t_diet)
+                elements_flow.append(t_shift)
                 
                 doc_file.build(elements_flow)
                 
