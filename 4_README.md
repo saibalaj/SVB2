@@ -7,7 +7,7 @@ Open your terminal inside the root project directory and execute these lines seq
 
 ```bash
 # Install the exact required package manifests
-pip install -r 1_requirements.txt
+pip install -r requirements.txt
 
 # Boot the web application application layer
-streamlit run 3_app.py
+streamlit run app.py
